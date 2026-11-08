@@ -3,503 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrippieFlix - Stream & Download Unlimited Movies</title>
+  <title>TrippieFlix - Stream, Download & Community</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #0b0914;
       color: #f3f4f6;
     }
     .gradient-text {
-      background: linear-gradient(135deg, #ff2a5f 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, #ff2a5f 0%, #7e22ce 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .gradient-bg {
-      background: linear-gradient(135deg, #ff2a5f 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, #ff2a5f 0%, #7e22ce 100%);
     }
     .glass-nav {
       background: rgba(11, 9, 20, 0.85);
       backdrop-filter: blur(16px);
     }
-    .movie-card:hover .movie-overlay {
-      opacity: 1;
-    }
-    .progress-bar-fill {
-      transition: width 0.3s ease;
-    }
-    /* Mobile frame simulator styles */
-    .mobile-simulator {
-      width: 375px;
-      height: 750px;
-      border: 12px solid #1f2937;
-      border-radius: 40px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    }
   </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="pb-20">
 
-  <!-- TOP NAVIGATION BAR -->
-  <nav class="fixed top-0 left-0 right-0 z-40 glass-nav border-b border-gray-800 px-4 py-3">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      
-      <!-- Logo & Brand -->
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="filterCategory('all')">
-        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center font-black text-xl text-white shadow-lg shadow-purple-900/40">
-          TF
-        </div>
-        <div>
-          <span class="text-2xl font-black tracking-wider gradient-text">TRIPPIEFLIX</span>
-          <span class="hidden sm:inline-block text-[10px] bg-purple-900/60 text-purple-300 px-2 py-0.5 rounded-full font-bold ml-1">v2.4</span>
-        </div>
+  <!-- Navigation Bar -->
+  <nav class="sticky top-0 z-50 glass-nav border-b border-gray-800/60 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <div class="w-9 h-9 gradient-bg rounded-lg flex items-center justify-center text-white font-black text-xl shadow-lg shadow-pink-500/30">
+        TF
       </div>
-
-      <!-- Search Input -->
-      <div class="hidden md:flex flex-1 max-w-md mx-6 relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400"></i>
-        <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Search movies, series, or filmmakers..." class="w-full bg-gray-900/80 border border-gray-700/80 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-purple-500 text-gray-200 transition">
-      </div>
-
-      <!-- Controls & Actions -->
-      <div class="flex items-center space-x-3">
-        
-        <!-- Mobile Frame Toggle -->
-        <button onclick="toggleMobileSimulator()" title="Toggle Phone View" class="p-2 bg-gray-800/80 hover:bg-gray-700 rounded-lg text-gray-300 transition text-sm">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-        </button>
-
-        <!-- Offline Library Drawer Button -->
-        <button onclick="openOfflineDrawer()" class="relative p-2 bg-gray-800/80 hover:bg-gray-700 rounded-lg text-gray-300 transition text-sm">
-          <i class="fa-solid fa-download"></i>
-          <span id="downloadBadge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-        </button>
-
-        <!-- Currency Switcher -->
-        <div class="bg-gray-900/90 p-1 rounded-lg border border-gray-800 flex text-xs font-semibold">
-          <button id="currKSH" onclick="setCurrency('KSH')" class="px-2 py-1 rounded bg-purple-600 text-white transition">KSh</button>
-          <button id="currUSD" onclick="setCurrency('USD')" class="px-2 py-1 rounded text-gray-400 hover:text-white transition">USD</button>
-        </div>
-
-        <!-- User Tier Badge & Switcher -->
-        <button onclick="toggleTier()" id="tierBadge" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-3 py-1.5 rounded-lg border border-gray-700 flex items-center space-x-1 transition font-bold">
-          <span id="tierLabel">Free Tier (Ads)</span>
-          <i class="fa-solid fa-arrows-rotate text-[10px] ml-1"></i>
-        </button>
-
-        <!-- Upload Film (Creators) -->
-        <button onclick="openUploadModal()" class="gradient-bg text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:opacity-90 transition flex items-center space-x-1">
-          <i class="fa-solid fa-cloud-arrow-up"></i>
-          <span class="hidden sm:inline">Upload Film</span>
-        </button>
-
-      </div>
+      <span class="text-xl font-extrabold tracking-wider gradient-text">TRIPPIEFLIX</span>
+    </div>
+    <div class="flex items-center space-x-2">
+      <button onclick="scrollToSection('postSection')" class="gradient-bg text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow-md hover:opacity-90 transition">
+        <i class="fa-solid fa-pen-to-square"></i> Post
+      </button>
     </div>
   </nav>
 
-  <!-- MAIN CONTAINER -->
-  <main id="appContainer" class="pt-20 px-4 max-w-7xl mx-auto space-y-8">
-
-    <!-- HERO FEATURED SPOTLIGHT -->
-    <section class="relative rounded-3xl overflow-hidden border border-gray-800 bg-gradient-to-r from-purple-950/60 to-black p-6 md:p-12">
-      <div class="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="relative z-10 max-w-2xl space-y-4">
-        <div class="flex items-center space-x-2">
-          <span class="bg-rose-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Featured Release</span>
-          <span class="bg-purple-900/80 text-purple-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Approved Filmmaker</span>
+  <!-- Hero Feature Banner -->
+  <div class="p-4 max-w-4xl mx-auto">
+    <div class="relative rounded-2xl overflow-hidden border border-gray-800 bg-gray-900 shadow-2xl">
+      <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1000&q=80" alt="Nairobi Nights" class="w-full h-80 object-cover brightness-50">
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0b0914] via-[#0b0914]/40 to-transparent p-6 flex flex-col justify-end">
+        <div class="flex gap-2 mb-2">
+          <span class="bg-pink-600/90 text-white text-[10px] font-extrabold px-2 py-0.5 rounded tracking-wide uppercase">FEATURED RELEASE</span>
+          <span class="bg-purple-600/90 text-white text-[10px] font-extrabold px-2 py-0.5 rounded tracking-wide uppercase">APPROVED FILMMAKER</span>
         </div>
-        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Nairobi Nights: Neon City</h1>
-        <p class="text-gray-300 text-sm md:text-base line-clamp-3">A futuristic cyber-thriller set in the heart of Nairobi. When a rogue hacker discovers a hidden cybernetic network, the city's underbelly ignites into chaos.</p>
-        
-        <div class="flex items-center space-x-4 text-xs text-gray-400 font-semibold pt-2">
-          <span><i class="fa-solid fa-star text-amber-400 mr-1"></i>4.9 / 5</span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white mb-2 leading-tight">Nairobi Nights: Neon City</h1>
+        <p class="text-xs sm:text-sm text-gray-300 mb-4 max-w-lg line-clamp-2">A futuristic cyber-thriller set in the heart of Nairobi. When a rogue hacker discovers a hidden cybernetic network, the city's underbelly ignites into chaos.</p>
+        <div class="flex items-center gap-4 text-xs font-semibold text-gray-400 mb-4">
+          <span class="text-yellow-400"><i class="fa-solid fa-star"></i> 4.9/5</span>
           <span>2026</span>
           <span>2h 15m</span>
-          <span class="border border-gray-700 px-1.5 py-0.5 rounded text-[10px]">4K Ultra HD</span>
+          <span class="border border-gray-700 px-1.5 py-0.5 rounded text-[10px]">4K ULTRA HD</span>
         </div>
+        <div class="flex gap-3">
+          <button onclick="alert('Starting Nairobi Nights: Neon City...')" class="gradient-bg text-white font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-lg shadow-pink-500/20 hover:scale-105 transition">
+            <i class="fa-solid fa-play"></i> Watch Now
+          </button>
+          <button onclick="alert('Downloading movie offline...')" class="bg-gray-800/80 hover:bg-gray-700 text-white font-bold text-sm px-4 py-2.5 rounded-xl border border-gray-700 flex items-center gap-2 transition">
+            <i class="fa-solid fa-download"></i> Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="flex flex-wrap gap-3 pt-4">
-          <button onclick="playMovie('Nairobi Nights: Neon City', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')" class="gradient-bg text-white px-6 py-2.5 rounded-xl font-bold flex items-center space-x-2 hover:shadow-lg hover:shadow-purple-600/30 transition text-sm">
-            <i class="fa-solid fa-play"></i>
-            <span>Watch Now</span>
-          </button>
-          <button onclick="triggerDownload('Nairobi Nights: Neon City', '4.2 GB')" class="bg-gray-800/90 border border-gray-700 text-gray-200 px-5 py-2.5 rounded-xl font-bold flex items-center space-x-2 hover:bg-gray-700 transition text-sm">
-            <i class="fa-solid fa-download"></i>
-            <span>Download</span>
+  <!-- Main App Content Container -->
+  <main class="max-w-4xl mx-auto px-4 mt-4 space-y-8">
+
+    <!-- Community & Creator Posting Form -->
+    <section id="postSection" class="bg-gray-900/90 border border-gray-800 rounded-2xl p-5 shadow-xl">
+      <div class="flex items-center gap-2 mb-4">
+        <i class="fa-solid fa-plus-circle text-pink-500 text-lg"></i>
+        <h2 class="text-lg font-bold text-white">Create a Post or Review</h2>
+      </div>
+      <form id="createPostForm" onsubmit="handlePostSubmit(event)" class="space-y-3">
+        <div>
+          <input type="text" id="postTitle" placeholder="Title / Movie Name (e.g. TrippieFlix Review)" required 
+            class="w-full bg-gray-800/90 border border-gray-700 text-white text-sm rounded-xl p-3 focus:outline-none focus:border-pink-500 transition">
+        </div>
+        <div>
+          <textarea id="postContent" rows="3" placeholder="What's on your mind? Share a movie link, lyric breakdown, or update..." required
+            class="w-full bg-gray-800/90 border border-gray-700 text-white text-sm rounded-xl p-3 focus:outline-none focus:border-pink-500 transition"></textarea>
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="gradient-bg text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-pink-500/20 hover:opacity-95 transition">
+            Publish Post
           </button>
         </div>
+      </form>
+    </section>
+
+    <!-- Dynamic Live Feed -->
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-fire text-pink-500"></i> Community Feed & Uploads
+        </h2>
+        <span class="text-xs text-gray-400">Live Updates</span>
+      </div>
+      <div id="postsFeed" class="space-y-4">
+        <!-- Posts will render dynamically here -->
       </div>
     </section>
 
-    <!-- CATEGORY FILTERS & TIER BANNER -->
-    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-800/80 pb-4">
-      <!-- Filter Chips -->
-      <div class="flex flex-wrap gap-2 text-xs font-semibold">
-        <button onclick="filterCategory('all')" class="cat-btn bg-purple-600 text-white px-4 py-1.5 rounded-full transition">All Content</button>
-        <button onclick="filterCategory('trending')" class="cat-btn bg-gray-800 text-gray-400 hover:text-white px-4 py-1.5 rounded-full transition">🔥 Trending</button>
-        <button onclick="filterCategory('filmmaker')" class="cat-btn bg-gray-800 text-gray-400 hover:text-white px-4 py-1.5 rounded-full transition">🎬 Indie Filmmakers</button>
-        <button onclick="filterCategory('offline')" class="cat-btn bg-gray-800 text-gray-400 hover:text-white px-4 py-1.5 rounded-full transition">💾 Saved Offline</button>
-      </div>
-
-      <!-- Pricing Information Box -->
-      <div class="text-xs text-right bg-gray-900/60 border border-gray-800 p-2 rounded-xl">
-        <span class="text-gray-400">Premium Upgrade: </span>
-        <span id="priceDisplay" class="font-bold text-purple-400">KSh 799/month</span>
-      </div>
-    </div>
-
-    <!-- MOVIE CATALOG GRID -->
+    <!-- Catalogue Section -->
     <section>
-      <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
-        <i class="fa-solid fa-film text-purple-500"></i>
-        <span>Explore Catalogue</span>
+      <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-film text-purple-500"></i> Explore Catalogue
       </h2>
-
-      <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        <!-- Dynamic Cards Inserted Here via JS -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80" class="w-full h-36 object-cover">
+          <div class="p-3">
+            <h3 class="font-bold text-sm text-white truncate">Cyber Street Chronicles</h3>
+            <p class="text-xs text-gray-400 mt-1">Indie Action</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=400&q=80" class="w-full h-36 object-cover">
+          <div class="p-3">
+            <h3 class="font-bold text-sm text-white truncate">Safari Sunset</h3>
+            <p class="text-xs text-gray-400 mt-1">Documentary</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80" class="w-full h-36 object-cover">
+          <div class="p-3">
+            <h3 class="font-bold text-sm text-white truncate">Shadows of the City</h3>
+            <p class="text-xs text-gray-400 mt-1">Drama</p>
+          </div>
+        </div>
       </div>
     </section>
 
   </main>
 
-  <!-- STREAMING VIDEO PLAYER MODAL -->
-  <div id="playerModal" class="fixed inset-0 z-50 bg-black/95 hidden flex flex-col justify-center items-center p-2 sm:p-6">
-    <div class="w-full max-w-4xl bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 shadow-2xl relative">
-      
-      <!-- Player Header -->
-      <div class="flex items-center justify-between p-4 bg-gray-950/80 border-b border-gray-800">
-        <div>
-          <h3 id="playerMovieTitle" class="font-bold text-sm sm:text-base text-gray-100">Movie Title</h3>
-          <p id="playerSubtitle" class="text-xs text-purple-400">TrippieFlix Video Engine</p>
-        </div>
-        <button onclick="closePlayer()" class="text-gray-400 hover:text-white text-lg px-2 py-1">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <!-- Ad Overlay Alert (For Free Tier) -->
-      <div id="adBanner" class="hidden bg-amber-500/20 border-b border-amber-500/40 text-amber-300 text-xs px-4 py-2 flex items-center justify-between">
-        <span><i class="fa-solid fa-rectangle-ad mr-2"></i>Sponsored Ad running (Free Tier). Upgrade to Premium to skip ads.</span>
-        <span id="adCountdown" class="font-bold">Ad: 5s</span>
-      </div>
-
-      <!-- Video Wrapper -->
-      <div class="relative bg-black aspect-video flex items-center justify-center">
-        <video id="videoElement" class="w-full h-full object-contain" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
-      </div>
-
-      <!-- Custom Player Controls Bar -->
-      <div class="p-4 bg-gray-950 flex flex-col space-y-2">
-        <!-- Progress Bar -->
-        <input type="range" id="videoScrubber" min="0" max="100" value="0" oninput="seekVideo(this.value)" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500">
-        
-        <div class="flex items-center justify-between text-xs text-gray-300 pt-1">
-          <div class="flex items-center space-x-3">
-            <button onclick="togglePlayPause()" id="playPauseBtn" class="text-white hover:text-purple-400 text-base">
-              <i class="fa-solid fa-play"></i>
-            </button>
-            <span id="timeCounter">00:00 / 00:00</span>
-          </div>
-
-          <div class="flex items-center space-x-3">
-            <!-- Quality Badge -->
-            <span id="qualityLabel" class="bg-gray-800 text-gray-400 px-2 py-0.5 rounded text-[10px] font-bold">1080p HD</span>
-            <!-- Download Button -->
-            <button onclick="downloadCurrentFromPlayer()" class="hover:text-purple-400" title="Download Movie">
-              <i class="fa-solid fa-download"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- OFFLINE DOWNLOADS DRAWER -->
-  <div id="offlineDrawer" class="fixed inset-y-0 right-0 z-50 w-80 bg-gray-900 border-l border-gray-800 shadow-2xl p-4 transform translate-x-full transition-transform duration-300 flex flex-col">
-    <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-      <h3 class="font-bold text-sm flex items-center space-x-2">
-        <i class="fa-solid fa-download text-purple-500"></i>
-        <span>Offline Downloads</span>
-      </h3>
-      <button onclick="closeOfflineDrawer()" class="text-gray-400 hover:text-white">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <div id="downloadList" class="flex-1 overflow-y-auto py-4 space-y-3">
-      <!-- Active and Completed Downloads render here -->
-      <p id="emptyDownloadMsg" class="text-xs text-gray-500 text-center py-8">No offline movies downloaded yet.</p>
-    </div>
-  </div>
-
-  <!-- FILMMAKER UPLOAD MODAL -->
-  <div id="uploadModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="font-bold text-base text-gray-100 flex items-center space-x-2">
-          <i class="fa-solid fa-clapperboard text-purple-500"></i>
-          <span>Filmmaker Portal</span>
-        </h3>
-        <button onclick="closeUploadModal()" class="text-gray-400 hover:text-white">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <form onsubmit="handleFilmUpload(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block text-gray-400 mb-1">Movie Title</label>
-          <input type="text" id="uploadTitle" required placeholder="e.g. Rift Valley Shadows" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-gray-200 focus:outline-none focus:border-purple-500">
-        </div>
-        <div>
-          <label class="block text-gray-400 mb-1">Director / Studio Name</label>
-          <input type="text" id="uploadDirector" required placeholder="e.g. Trippie Studios" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-gray-200 focus:outline-none focus:border-purple-500">
-        </div>
-        <div>
-          <label class="block text-gray-400 mb-1">Genre</label>
-          <select id="uploadGenre" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-gray-200 focus:outline-none focus:border-purple-500">
-            <option value="Action">Action / Thriller</option>
-            <option value="Drama">Drama</option>
-            <option value="Sci-Fi">Sci-Fi</option>
-            <option value="Documentary">Documentary</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-gray-400 mb-1">Video Stream URL</label>
-          <input type="url" id="uploadUrl" required placeholder="https://example.com/video.mp4" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-gray-200 focus:outline-none focus:border-purple-500">
-        </div>
-        <button type="submit" class="w-full gradient-bg py-3 rounded-xl font-bold text-white hover:opacity-90 transition mt-2">Publish to TrippieFlix</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- APPLICATION LOGIC SCRIPT -->
+  <!-- Interactive JavaScript Logic -->
   <script>
-    // State Management
-    let currentCurrency = 'KSH';
-    let isPremium = false;
-    let moviesData = [
-      { id: 1, title: 'Nairobi Nights: Neon City', category: 'trending', filmmaker: 'Trippie Studios', rating: '4.9', quality: '4K', size: '4.2 GB', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=500&q=80' },
-      { id: 2, title: 'Savannah Horizon', category: 'filmmaker', filmmaker: 'Kenyan Lens Media', rating: '4.7', quality: '1080p', size: '2.1 GB', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', poster: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=500&q=80' },
-      { id: 3, title: 'Cyber Drift 2088', category: 'trending', filmmaker: 'Westie Digital', rating: '4.8', quality: '4K', size: '3.8 GB', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', poster: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=500&q=80' },
-      { id: 4, title: 'Voices of Kerugoya', category: 'filmmaker', filmmaker: 'Nathaniel Films', rating: '4.6', quality: '1080p', size: '1.7 GB', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', poster: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80' },
-      { id: 5, title: 'Midnight Hustle', category: 'trending', filmmaker: '254 Cinema', rating: '4.5', quality: '1080p', size: '2.4 GB', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', poster: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=500&q=80' }
+    const INITIAL_POSTS = [
+      {
+        id: 1,
+        title: "Welcome to TrippieFlix!",
+        content: "The official web platform & Android app is now live. Share your movie recommendations and thoughts below!",
+        date: "Just now",
+        author: "TrippieFlix Team"
+      }
     ];
-    let downloadedMovies = [];
-    let currentCategory = 'all';
 
-    // Render Movie Grid
-    function renderMovies() {
-      const grid = document.getElementById('movieGrid');
-      grid.innerHTML = '';
+    function getPosts() {
+      const saved = localStorage.getItem('trippie_posts');
+      return saved ? JSON.parse(saved) : INITIAL_POSTS;
+    }
 
-      let filtered = moviesData;
-      if (currentCategory === 'trending') filtered = moviesData.filter(m => m.category === 'trending');
-      if (currentCategory === 'filmmaker') filtered = moviesData.filter(m => m.category === 'filmmaker');
-      if (currentCategory === 'offline') filtered = moviesData.filter(m => downloadedMovies.some(d => d.title === m.title));
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 text-xs">No movies found in this category.</div>`;
+    function renderPosts() {
+      const posts = getPosts();
+      const container = document.getElementById('postsFeed');
+      
+      if (posts.length === 0) {
+        container.innerHTML = `<div class="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center text-gray-400 text-sm">No posts yet. Be the first to share!</div>`;
         return;
       }
 
-      filtered.forEach(movie => {
-        const card = document.createElement('div');
-        card.className = 'movie-card bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden relative group cursor-pointer transition transform hover:-translate-y-1';
-        card.innerHTML = `
-          <div class="aspect-[2/3] bg-gray-800 relative overflow-hidden">
-            <img src="${movie.poster}" alt="${movie.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-            <div class="movie-overlay absolute inset-0 bg-black/75 opacity-0 transition flex flex-col justify-end p-3 space-y-2">
-              <button onclick="playMovie('${movie.title}', '${movie.url}')" class="gradient-bg text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center space-x-1">
-                <i class="fa-solid fa-play"></i>
-                <span>Stream</span>
-              </button>
-              <button onclick="triggerDownload('${movie.title}', '${movie.size}')" class="bg-gray-800 border border-gray-700 text-gray-200 text-xs font-bold py-2 rounded-lg flex items-center justify-center space-x-1 hover:bg-gray-700">
-                <i class="fa-solid fa-download"></i>
-                <span>Download</span>
-              </button>
-            </div>
-            <span class="absolute top-2 right-2 bg-black/70 text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm">${movie.quality}</span>
+      container.innerHTML = posts.map(post => `
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-2 shadow-lg">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-pink-400">${post.author || 'User'}</span>
+            <span class="text-[11px] text-gray-500">${post.date}</span>
           </div>
-          <div class="p-3 space-y-1">
-            <h4 class="font-bold text-xs truncate text-gray-200">${movie.title}</h4>
-            <div class="flex items-center justify-between text-[10px] text-gray-400">
-              <span>${movie.filmmaker}</span>
-              <span class="text-amber-400 font-bold"><i class="fa-solid fa-star mr-0.5"></i>${movie.rating}</span>
-            </div>
+          <h3 class="font-bold text-white text-base">${escapeHtml(post.title)}</h3>
+          <p class="text-sm text-gray-300 whitespace-pre-line">${escapeHtml(post.content)}</p>
+          <div class="pt-2 flex items-center justify-end">
+            <button onclick="deletePost(${post.id})" class="text-xs text-gray-500 hover:text-red-400 transition">
+              <i class="fa-solid fa-trash"></i> Delete
+            </button>
           </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    // Currency Switcher Logic
-    function setCurrency(curr) {
-      currentCurrency = curr;
-      document.getElementById('currKSH').className = curr === 'KSH' ? 'px-2 py-1 rounded bg-purple-600 text-white transition' : 'px-2 py-1 rounded text-gray-400 hover:text-white transition';
-      document.getElementById('currUSD').className = curr === 'USD' ? 'px-2 py-1 rounded bg-purple-600 text-white transition' : 'px-2 py-1 rounded text-gray-400 hover:text-white transition';
-      document.getElementById('priceDisplay').innerText = curr === 'KSH' ? 'KSh 799/month' : '$5.99/month';
-    }
-
-    // Free vs Premium Tier Toggle
-    function toggleTier() {
-      isPremium = !isPremium;
-      const label = document.getElementById('tierLabel');
-      const badge = document.getElementById('tierBadge');
-      
-      if (isPremium) {
-        label.innerText = 'Premium Tier (No Ads)';
-        badge.className = 'bg-amber-500/20 text-amber-300 text-xs px-3 py-1.5 rounded-lg border border-amber-500/40 flex items-center space-x-1 font-bold';
-      } else {
-        label.innerText = 'Free Tier (Ads)';
-        badge.className = 'bg-gray-800 text-gray-300 text-xs px-3 py-1.5 rounded-lg border border-gray-700 flex items-center space-x-1 font-bold';
-      }
-    }
-
-    // Video Player Logic
-    function playMovie(title, url) {
-      document.getElementById('playerMovieTitle').innerText = title;
-      const video = document.getElementById('videoElement');
-      video.src = url;
-      
-      const modal = document.getElementById('playerModal');
-      const adBanner = document.getElementById('adBanner');
-      modal.classList.remove('hidden');
-
-      if (!isPremium) {
-        adBanner.classList.remove('hidden');
-        let countdown = 5;
-        const timer = setInterval(() => {
-          countdown--;
-          document.getElementById('adCountdown').innerText = `Ad: ${countdown}s`;
-          if (countdown <= 0) {
-            clearInterval(timer);
-            adBanner.classList.add('hidden');
-            video.play();
-          }
-        }, 1000);
-      } else {
-        adBanner.classList.add('hidden');
-        video.play();
-      }
-    }
-
-    function closePlayer() {
-      const video = document.getElementById('videoElement');
-      video.pause();
-      document.getElementById('playerModal').classList.add('hidden');
-    }
-
-    // Offline Downloads Manager
-    function triggerDownload(title, size) {
-      const drawer = document.getElementById('offlineDrawer');
-      drawer.classList.remove('translate-x-full');
-
-      const downloadList = document.getElementById('downloadList');
-      document.getElementById('emptyDownloadMsg')?.remove();
-
-      const item = document.createElement('div');
-      item.className = 'bg-gray-800 border border-gray-700 p-3 rounded-xl space-y-2';
-      item.innerHTML = `
-        <div class="flex items-center justify-between text-xs">
-          <span class="font-bold text-gray-200 truncate max-w-[150px]">${title}</span>
-          <span class="text-[10px] text-purple-400 font-bold" id="dlSpeed-${title.replace(/\s+/g, '')}">3.2 MB/s</span>
         </div>
-        <div class="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
-          <div id="dlProgress-${title.replace(/\s+/g, '')}" class="progress-bar-fill gradient-bg h-full w-0"></div>
-        </div>
-        <div class="flex items-center justify-between text-[10px] text-gray-400">
-          <span>${size}</span>
-          <span id="dlStatus-${title.replace(/\s+/g, '')}">Downloading...</span>
-        </div>
-      `;
-      downloadList.prepend(item);
-
-      // Simulate Real-time Download Progress
-      let progress = 0;
-      const cleanId = title.replace(/\s+/g, '');
-      const interval = setInterval(() => {
-        progress += isPremium ? 20 : 10;
-        document.getElementById(`dlProgress-${cleanId}`).style.width = `${progress}%`;
-        
-        if (progress >= 100) {
-          clearInterval(interval);
-          document.getElementById(`dlStatus-${cleanId}`).innerText = 'Completed';
-          document.getElementById(`dlStatus-${cleanId}`).className = 'text-emerald-400 font-bold';
-          document.getElementById(`dlSpeed-${cleanId}`).innerText = 'Saved';
-          
-          if (!downloadedMovies.some(m => m.title === title)) {
-            downloadedMovies.push({ title, size });
-            updateBadge();
-          }
-        }
-      }, 400);
+      `).join('');
     }
 
-    function updateBadge() {
-      const badge = document.getElementById('downloadBadge');
-      badge.innerText = downloadedMovies.length;
-      badge.classList.remove('hidden');
-    }
-
-    function openOfflineDrawer() {
-      document.getElementById('offlineDrawer').classList.remove('translate-x-full');
-    }
-
-    function closeOfflineDrawer() {
-      document.getElementById('offlineDrawer').classList.add('translate-x-full');
-    }
-
-    // Filmmaker Portal Modal
-    function openUploadModal() {
-      document.getElementById('uploadModal').classList.remove('hidden');
-    }
-
-    function closeUploadModal() {
-      document.getElementById('uploadModal').classList.add('hidden');
-    }
-
-    function handleFilmUpload(e) {
+    function handlePostSubmit(e) {
       e.preventDefault();
-      const title = document.getElementById('uploadTitle').value;
-      const director = document.getElementById('uploadDirector').value;
-      const url = document.getElementById('uploadUrl').value;
-
-      moviesData.unshift({
+      const titleInput = document.getElementById('postTitle');
+      const contentInput = document.getElementById('postContent');
+      
+      const newPost = {
         id: Date.now(),
-        title: title,
-        category: 'filmmaker',
-        filmmaker: director,
-        rating: '5.0',
-        quality: '1080p',
-        size: '2.5 GB',
-        url: url,
-        poster: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80'
-      });
+        title: titleInput.value.trim(),
+        content: contentInput.value.trim(),
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        author: "Community Member"
+      };
 
-      renderMovies();
-      closeUploadModal();
-      alert(`Film "${title}" successfully published to TrippieFlix!`);
+      const currentPosts = getPosts();
+      currentPosts.unshift(newPost);
+      localStorage.setItem('trippie_posts', JSON.stringify(currentPosts));
+
+      titleInput.value = '';
+      contentInput.value = '';
+
+      renderPosts();
     }
 
-    // Category Filter Chip Click
-    function filterCategory(cat) {
-      currentCategory = cat;
-      renderMovies();
+    function deletePost(id) {
+      let posts = getPosts();
+      posts = posts.filter(p => p.id !== id);
+      localStorage.setItem('trippie_posts', JSON.stringify(posts));
+      renderPosts();
     }
 
-    // Mobile View Toggle
-    function toggleMobileSimulator() {
-      const container = document.getElementById('appContainer');
-      container.classList.toggle('mobile-simulator');
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Initialize App
-    renderMovies();
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    // Initial load
+    renderPosts();
   </script>
 </body>
 </html>
